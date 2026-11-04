@@ -202,6 +202,10 @@ if (BUILD_EXECUTABLE STREQUAL "unitTest")
         add_subdirectory(platforms/posix/bsp/bspEepromDriver/test)
         add_subdirectory(platforms/posix/bsp/socketCanTransceiver/test)
 
+        add_subdirectory(
+            executables/referenceApp/platforms/posix/freeRtosCoreConfiguration/test
+        )
+
     elseif (OPENBSW_PLATFORM STREQUAL "stm32")
 
         add_subdirectory(platforms/stm32/unitTest EXCLUDE_FROM_ALL)

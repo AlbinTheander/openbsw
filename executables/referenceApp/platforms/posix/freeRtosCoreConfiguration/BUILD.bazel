@@ -9,12 +9,30 @@
 # *******************************************************************************
 
 load("@rules_cc//cc:cc_library.bzl", "cc_library")
-load("//bazel/config/build_variant:compatibility.bzl", "reference_app_posix_only")
+load("@rules_cc//cc:cc_test.bzl", "cc_test")
+load("//bazel/config/build_variant:compatibility.bzl", "reference_app_posix_only", "unit_test_only")
+
+cc_library(
+    # Headers-only split for posix unit tests.
+    name = "freertos_core_configuration_headers",
+    hdrs = ["include/os/FreeRtosPlatformConfig.h"],
+    strip_include_prefix = "include",
+    visibility = ["//visibility:private"],
+)
 
 cc_library(
     name = "freertos_core_configuration",
-    hdrs = ["include/os/FreeRtosPlatformConfig.h"],
-    strip_include_prefix = "include",
     target_compatible_with = reference_app_posix_only(),
     visibility = ["//visibility:public"],
+    deps = [":freertos_core_configuration_headers"],
+)
+
+cc_test(
+    name = "freertos_platform_config_test",
+    srcs = ["test/src/os/FreeRtosPlatformConfigTest.cpp"],
+    target_compatible_with = unit_test_only(),
+    deps = [
+        ":freertos_core_configuration_headers",
+        "//libs/3rdparty/googletest:gtest_main",
+    ],
 )
